@@ -1,12 +1,21 @@
 #ifndef MYVECTOR_H
 #define MYVECTOR_H
 #include <iostream>
+#include "TestClass.h"
 
 template <typename T>
 class MyVector
 {
 public:
     MyVector()
+    {
+        m_data = nullptr;
+        m_size = 0;
+        m_capacity = 2;
+        ReAloc(m_capacity);
+    }
+
+    MyVector(std::initializer_list<T>)
     {
         m_data = nullptr;
         m_size = 0;
@@ -162,6 +171,24 @@ void runMyVector()
 
     vec01.clearAll();
     vec01.print();
+
+    TestClass object01;
+    object01.setName("Object 01");
+    object01.setId(1);
+    TestClass object02("Object 02", 2);
+    TestClass object03("Object 03", 3);
+
+    MyVector<TestClass> objects;
+
+    objects.pushBack(object01);
+    objects.pushBack(object02);
+    objects.pushBack(object03);
+    std::cout << "Test Class Size is : " << objects.getSize() << std::endl;
+
+    for (size_t i {}; i < objects.getSize(); i++)
+    {
+        objects[i].doStuff();
+    }
 }
 
 #endif // MYVECTOR_H

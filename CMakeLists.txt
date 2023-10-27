@@ -15,6 +15,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core)
 add_executable(Conteiners
   main.cpp
   myvector.h
+  testclass.h
 )
 target_link_libraries(Conteiners Qt${QT_VERSION_MAJOR}::Core)
 
