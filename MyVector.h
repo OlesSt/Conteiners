@@ -3,22 +3,79 @@
 #include <iostream>
 #include "TestClass.h"
 
+
+
 template <typename T>
 class MyVector
 {
+
+    template <typename MyVector>
+    class MyIterator
+    {
+    public:
+        using ValueType     = typename MyVector::ValueType;
+        using PointerType   = ValueType*;
+        using ReferenceType = ValueType&;
+    public:
+        MyIterator(PointerType ptr)
+            : m_Ptr(ptr) {}
+
+
+        MyIterator& operator++()
+        {
+            m_Ptr++;
+            return *this;
+        }
+
+        MyIterator operator++(int)
+        {
+            MyIterator it = *this;
+            ++(*this);
+            return it;
+        }
+
+        MyIterator& operator--()
+        {
+            m_Ptr--;
+            return *this;
+        }
+
+        MyIterator operator--(int)
+        {
+            MyIterator it = *this;
+            --(*this);
+            return it;
+        }
+
+        ReferenceType operator[] (int index)
+        { return *(m_Ptr + index); }
+
+        ReferenceType operator->()
+        { return m_Ptr; }
+
+        ReferenceType operator*()
+        { return *m_Ptr; }
+
+        bool operator==(const MyIterator& other) const
+        {
+            return m_Ptr == other.m_Ptr;
+        }
+
+        bool operator!=(const MyIterator& other) const
+        {
+            return !(*this == other);
+        }
+
+    private:
+        PointerType m_Ptr;
+    };
+
+public:
+    using ValueType = T;
+    using Iterator = MyIterator<MyVector<T>>;
 public:
     MyVector()
     {
-        m_data = nullptr;
-        m_size = 0;
-        m_capacity = 2;
-        ReAloc(m_capacity);
-    }
-
-    MyVector(std::initializer_list<T>)
-    {
-        m_data = nullptr;
-        m_size = 0;
         m_capacity = 2;
         ReAloc(m_capacity);
     }
@@ -72,8 +129,8 @@ public:
             ReAloc(m_capacity * 2);                 // - inserted to the constructor
         }
 
-//        new(&m_data[m_size]) T(std::forward<Args>(args)...);
-        m_data[m_size] = T(std::forward<Args>(args)...);
+        new(&m_data[m_size]) T(std::forward<Args>(args)...);
+//        m_data[m_size] = T(std::forward<Args>(args)...);
         return m_data[m_size++];
     }
 
@@ -116,6 +173,9 @@ public:
         std::cout << std::endl;
     }
 
+    Iterator begin() { return Iterator(m_data); }
+    Iterator end()   { return Iterator(m_data + m_size); }
+
 private:
     void ReAloc(size_t newCapacity)                 // Functoin realocate memory for new vector
     {
@@ -128,7 +188,8 @@ private:
 
         for(size_t i = 0; i < m_size; i++)                          // 3 - copy all element from current memory block to new memory clok
         {
-            newBlock[i] = std::move(m_data[i]);                     //     or try to move it
+            new(&newBlock[i]) T(std::move(m_data[i]));
+/*            newBlock[i] = std::move(m_data[i]); */                    //     or try to move it
         }
 
         for (size_t i = 0; i < m_size; i++)                         // - call destructor for each element
@@ -141,14 +202,16 @@ private:
         m_capacity = newCapacity;
     }
 private:
-    T* m_data;
-    size_t m_size;
-    size_t m_capacity;
+    T* m_data = nullptr;;
+    size_t m_size = 0;
+    size_t m_capacity = 0;
 };
 
 
 void runMyVector()
 {
+    std::cout << "\n===== CONTAINER TEST =====" << std::endl;
+
     MyVector<int> vec01;
     vec01.pushBack(1);
     vec01.pushBack(2);
@@ -169,8 +232,23 @@ void runMyVector()
     vec01.popBack();
     vec01.print();
 
+    std::cout << "\n===== ITERATOR TEST =====" << std::endl;
+
+    for (auto& i : vec01)
+    {std::cout << i << " ";}
+    std::cout << std::endl;
+
+
+
+    for (MyVector<int>::Iterator it = vec01.begin(); it != vec01.end(); it++)
+    {std::cout << *it << " ";}
+    std::cout << std::endl;
+
     vec01.clearAll();
     vec01.print();
+
+
+    std::cout << "\n===== CLASS TEST =====" << std::endl;
 
     TestClass object01;
     object01.setName("Object 01");
@@ -186,9 +264,10 @@ void runMyVector()
     std::cout << "Test Class Size is : " << objects.getSize() << std::endl;
 
     for (size_t i {}; i < objects.getSize(); i++)
-    {
-        objects[i].doStuff();
-    }
+        {objects[i].doStuff();}
+
+    for (auto &obj : objects)
+        {std::cout << obj.getName() << std::endl;}
 }
 
 #endif // MYVECTOR_H
