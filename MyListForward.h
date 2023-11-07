@@ -11,22 +11,28 @@ public:
 
     // CONSTRUCTOR
     MyList()
-        : head(nullptr), tail(nullptr) {}                   // Head is nullptr by default
+        : head(nullptr), tail(nullptr), m_size(0) {}        // Head is nullptr by default
 
     MyList(const MyList &other)                             // SPEED = O(N)
-        : head(nullptr), tail(nullptr)                      // Head is null
+        : head(nullptr), tail(nullptr), m_size(0)           // Head is null
     { сopy(other); }                                        // call copy method from private section
 
     MyList (MyList &&other)                                 // SPEED = o(1)
-        : head(other.head), tail(other.tail)                 // Head is now head of Node to move
-    { other.head = nullptr;
-      other.tail = nullptr;}                               // ...and head of Node to move is Null
+        : head(other.head),
+          tail(other.tail),                                 // Head is now head of Node to move
+          m_size(other.m_size)
+
+    {
+        other.head = nullptr;
+        other.tail = nullptr;
+        other.m_size = 0;
+    }                                                       // ...and head of Node to move is Null
 
     ~MyList()   {clear_All();}                              // Destructor call clear_All method, wich deletes all element
 
 
     // INSERT METHODS
-    void push_back(const T &value)                      // Method to insert new Node to the end, SPEED O(1)
+    void push_back(const T &value)                          // Method to insert new Node to the end, SPEED O(1)
     {
         if (head == nullptr)                                // if List is empty...
         {
@@ -46,6 +52,7 @@ public:
             current->next = new Node {value, nullptr};     //...and create a new Node at the end
             */
         }
+        m_size++;
     }
 
     void push_front(const T &value)                     // Method to insert new Node to the begin
@@ -66,6 +73,7 @@ public:
             Node *newHead = new Node{value, head};
             head = newHead;
         }
+        m_size++;
     }
 
     // REMOVE METHODS
@@ -93,6 +101,7 @@ public:
             previous->next = nullptr;                   // 06 - point last elem to the nullptr
             tail = previous;
         }
+        m_size--;
     }
 
     void pop_front()                                    // Method to delete first element
@@ -112,6 +121,7 @@ public:
             delete head;                                // 04 - delete current head
             head = newHead;                             // 05 - make a new head as first elem of list, like a head
         }
+        m_size--;
     }
 
     void remove(const T &value)                         // Method to delete element by value
@@ -140,6 +150,7 @@ public:
                     }
                 }
                 delete current;                         // 05 - delete Node and break the loop
+                m_size--;
                 return;
             }
             previous = current;                         // 06 - iterate List to move forward
@@ -156,6 +167,7 @@ public:
             delete current;                     // Delete previous head through the current Node
         }
         tail = nullptr;
+        m_size = 0;
     }
 
     // UTILITY
@@ -180,27 +192,9 @@ public:
         return head == nullptr;                 // if head is null - list ia empty
     }
 
-    size_t size()                               // Method to get list size
+    size_t size() const                         // Method to get list size
     {
-        size_t s{0};
-        if (head == nullptr)                    // 01 - if head is null - list is emty
-        {
-            s = 0;
-        }
-        else if (head->next == nullptr)         // 02 - if next Node is null - list has only head = 1
-        {
-            s = 1;
-        }
-        else
-        {
-            Node *current = head;               // 03 - else - iterate through the list
-            while (current != nullptr)
-            {
-                s++;
-                current = current->next;        // 04 - increment size with each Node
-            }
-        }
-        return s;
+        return m_size;
     }
 
     MyList &operator=(const MyList &other)      // Overload operator= as Copy
@@ -220,15 +214,17 @@ public:
             clear_All();                        // 02 - erase all Nodes in current obj
             head = other.head;                  // 03 - make current obj as move obj
             tail = other.tail;
+            m_size = other.m_size;
             other.head = nullptr;               // 04 - kill obj to move
             other.tail = nullptr;
+            other.m_size = 0;
         }
         return *this;
     }
 
     T& operator[](size_t index)
     {
-        if (index > this->size())
+        if (index > m_size)
         { std::cerr << "OUT OF RANGE" << std::endl;}
 
         Node *current = head;
@@ -243,7 +239,7 @@ public:
 
     const T &operator[](size_t index) const
     {
-        if (index > this->size())
+        if (index > m_size)
         { std::cerr << "OUT OF RANGE" << std::endl;}
 
         Node *current = head;
@@ -281,6 +277,7 @@ private:
         {
             head = nullptr;
             tail = nullptr;
+            m_size = 0;
         }
         else
         {
@@ -297,6 +294,7 @@ private:
                 other_current = other_current->next;
             }
             tail = current;
+            m_size = other.m_size;
         }
     }
 
@@ -308,6 +306,7 @@ private:
 
     Node *head;
     Node *tail;
+    size_t m_size;
 };
 
 void runMyListForward()
@@ -327,6 +326,7 @@ void runMyListForward()
     list01.push_front(80);
     list01.push_front(70);
     list01.print();
+    std::cout <<list01.size() << std::endl;
 
     std::cout << "\n=== TEST MOVE CONSTUCTOR ===" << std::endl;
     MyList<int>list02 (std::move(list01));
@@ -343,13 +343,15 @@ void runMyListForward()
     list02.pop_back();
     list02.pop_back();
     list02.print();
+    std::cout <<list02.size() << std::endl;
 
     std::cout << "\n=== TEST POP FRONT METHOD ===" << std::endl;
     list02.pop_front();
     list02.pop_front();
     list02.print();
+    std::cout <<list02.size() << std::endl;
 
-    std::cout << "\n=== TEST POP REMOVE METHOD ===" << std::endl;
+    std::cout << "\n=== TEST REMOVE METHOD ===" << std::endl;
     list02.remove(10);
     list02.print();
 
@@ -387,6 +389,10 @@ void runMyListForward()
     {
         objects[i].doStuff();
     }
+
+    std::cout << "\n=== TEST CLEAR ALL METHOD ===" << std::endl;
+    objects.clear_All();
+    std::cout << objects.size() << std::endl;
 
 
 }
