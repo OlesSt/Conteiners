@@ -7,7 +7,48 @@
 template<typename T>
 class MyList
 {
+private:
+    struct Node
+    {
+        T data;
+        Node* next;
+    };
+    Node *head;
+    Node *tail;
+    size_t m_size;
+
 public:
+    class Iterator
+    {
+    public:
+        Iterator(Node *node)
+            : m_node(node) {}
+        bool operator!=(const Iterator& other)
+        {
+            return m_node != other.m_node;
+        }
+
+        Iterator &operator++()
+        {
+            m_node = m_node->next;
+            return *this;
+        }
+
+        Iterator operator++(int)
+        {
+            Iterator temp(*this);
+            m_node = m_node->next;
+            return temp;
+        }
+        T &operator*()
+        {
+            return m_node->data;
+        }
+
+    private:
+        Node *m_node;
+
+    };
 
     // CONSTRUCTOR
     MyList()
@@ -66,7 +107,7 @@ public:
         {
             Node *newHead = new Node {value, head};     // or create a new Node for future head with value as data and current head as next Node
             head = newHead;                             // asing to make Head as newHead
-            tail = head->next;
+            tail = head;
         }
         else
         {
@@ -222,14 +263,14 @@ public:
         return *this;
     }
 
-    T& operator[](size_t index)
+    T& operator[](size_t DONT_USE_IT)
     {
-        if (index > m_size)
+        if (DONT_USE_IT > m_size)
         { std::cerr << "OUT OF RANGE" << std::endl;}
 
         Node *current = head;
         size_t i{0};
-        while (i != index)
+        while (i != DONT_USE_IT)
         {
             current = current->next;
             i++;
@@ -237,19 +278,32 @@ public:
         return current->data;
     }
 
-    const T &operator[](size_t index) const
+    const T &operator[](size_t DONT_USE_IT) const
     {
-        if (index > m_size)
+        if (DONT_USE_IT > m_size)
         { std::cerr << "OUT OF RANGE" << std::endl;}
 
         Node *current = head;
         size_t i{0};
-        while (i != index)
+        while (i != DONT_USE_IT)
         {
             current = current->next;
             i++;
         }
         return current->data;
+    }
+
+    // ITERATORS
+    Iterator begin()
+    {
+        Iterator it(head);
+        return it;
+    }
+
+    Iterator end()
+    {
+        Iterator it(tail->next);
+        return it;
     }
 
     void print() const                                  // Print List in console
@@ -297,16 +351,6 @@ private:
             m_size = other.m_size;
         }
     }
-
-    struct Node
-    {
-        T data;
-        Node* next;
-    };
-
-    Node *head;
-    Node *tail;
-    size_t m_size;
 };
 
 void runMyListForward()
@@ -393,6 +437,19 @@ void runMyListForward()
     std::cout << "\n=== TEST CLEAR ALL METHOD ===" << std::endl;
     objects.clear_All();
     std::cout << objects.size() << std::endl;
+
+    std::cout << "\n=== TEST ITERATOR ===" << std::endl;
+    MyList<int>list06;
+    for (int i {0}; i < 10; i++)
+    {list06.push_back(i);}
+    list06.print();
+
+    for (MyList<int>::Iterator it = list06.begin(); it != list06.end(); ++it)
+    {
+        *it +=10;
+        std::cout << *it<< " ";
+    }
+    std::cout << std::endl;
 
 
 }
