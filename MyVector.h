@@ -3,8 +3,6 @@
 #include <iostream>
 #include "TestClass.h"
 
-
-
 template <typename T>
 class MyVector
 {
