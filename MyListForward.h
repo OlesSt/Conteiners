@@ -11,34 +11,40 @@ public:
 
     // CONSTRUCTOR
     MyList()
-        : head(nullptr) {}                  // Head is nullptr by default
+        : head(nullptr), tail(nullptr) {}                   // Head is nullptr by default
 
-    MyList(const MyList &other)             // SPEED = O(N)
-        : head(nullptr)                     // Head is null
-    { сopy(other); }                        // call copy method from private section
+    MyList(const MyList &other)                             // SPEED = O(N)
+        : head(nullptr), tail(nullptr)                      // Head is null
+    { сopy(other); }                                        // call copy method from private section
 
-    MyList (MyList &&other)                 // SPEED = o(1)
-        : head(other.head)                  // Head is now head of Node to move
-    { other.head = nullptr; }               // ...and head of Node to move is Null
+    MyList (MyList &&other)                                 // SPEED = o(1)
+        : head(other.head), tail(other.tail)                 // Head is now head of Node to move
+    { other.head = nullptr;
+      other.tail = nullptr;}                               // ...and head of Node to move is Null
 
-    ~MyList()   {clear_All();}              // Destructor call clear_All method, wich deletes all element
+    ~MyList()   {clear_All();}                              // Destructor call clear_All method, wich deletes all element
 
 
     // INSERT METHODS
-    void push_back(const T &value)                      // Method to insert new Node to the end
+    void push_back(const T &value)                      // Method to insert new Node to the end, SPEED O(1)
     {
         if (head == nullptr)                                // if List is empty...
         {
             head = new Node {value, nullptr};               // ... just create a first Node with value
+            tail = head;                                    // tail is the same as head
         }
         else
         {
+            tail->next = new Node{value, nullptr};
+            tail = tail->next;
+            /*
             Node *current = head;                           // else create a temp Node to iterate
             while(current->next != nullptr)                 // go through the list with temp Node until end...
             {
                 current = current->next;
             }
             current->next = new Node {value, nullptr};     //...and create a new Node at the end
+            */
         }
     }
 
@@ -47,16 +53,23 @@ public:
         if (head == nullptr)
         {
             head = new Node {value, nullptr};           // Check if list exist and just create a first Node if it's not
+            tail = head;
+        }
+        else if (head == tail)
+        {
+            Node *newHead = new Node {value, head};     // or create a new Node for future head with value as data and current head as next Node
+            head = newHead;                             // asing to make Head as newHead
+            tail = head->next;
         }
         else
         {
-            Node *newHead = new Node {value, head};     // or create a new Node for future head with value as data and current head as next Node
-            head = newHead;                             // aasing to make Head as newHead
+            Node *newHead = new Node{value, head};
+            head = newHead;
         }
     }
 
     // REMOVE METHODS
-    void pop_back()                                     // Method to delete last element
+    void pop_back()                                     // Method to delete last element, SPEED - O(N)
     {
         if (head == nullptr)                            // 01 - check if list exist
         { return; }
@@ -64,6 +77,7 @@ public:
         {
             delete head;
             head = nullptr;
+            tail = nullptr;
         }
         else                                            // 03 - create a temp Nodes to iterate
         {
@@ -77,6 +91,7 @@ public:
             }
             delete current;                             // 05 - delete elem
             previous->next = nullptr;                   // 06 - point last elem to the nullptr
+            tail = previous;
         }
     }
 
@@ -88,6 +103,7 @@ public:
         {
             delete head;
             head = nullptr;
+            tail = nullptr;
         }
 
         else
@@ -110,10 +126,18 @@ public:
                 if (previous == nullptr)                // 03 - check, if it's start of list...
                 {
                     head = head->next;                  // ... and if it is make head to nullptr (for one node list)
+                    if (head == nullptr)
+                    {
+                        tail = nullptr;
+                    }
                 }
                 else
                 {
                     previous->next = current->next;     // 04 - connect prev Node to Node after the deleted one
+                    if (current == tail)
+                    {
+                        tail = previous;
+                    }
                 }
                 delete current;                         // 05 - delete Node and break the loop
                 return;
@@ -131,6 +155,7 @@ public:
             head = head->next;                  // Move real head to the next Node
             delete current;                     // Delete previous head through the current Node
         }
+        tail = nullptr;
     }
 
     // UTILITY
@@ -194,7 +219,9 @@ public:
         {
             clear_All();                        // 02 - erase all Nodes in current obj
             head = other.head;                  // 03 - make current obj as move obj
+            tail = other.tail;
             other.head = nullptr;               // 04 - kill obj to move
+            other.tail = nullptr;
         }
         return *this;
     }
@@ -251,7 +278,10 @@ private:
     void сopy(const MyList &other)
     {
         if (other.head == nullptr)                                      // 01 - Check, if the list to copy exist
-        { return; }
+        {
+            head = nullptr;
+            tail = nullptr;
+        }
         else
         {
             head = new Node{other.head->data, nullptr};                 // 02 - Copy data from head of Copy List to current List
@@ -266,6 +296,7 @@ private:
                 current = current->next;                                // 05 - Set both list iterators to a next Node
                 other_current = other_current->next;
             }
+            tail = current;
         }
     }
 
@@ -276,6 +307,7 @@ private:
     };
 
     Node *head;
+    Node *tail;
 };
 
 void runMyListForward()
@@ -351,13 +383,10 @@ void runMyListForward()
     objects.push_back(t01);
     objects.push_back(t02);
     objects.push_back(t03);
-
-
-
-
-
-
-
+    for (size_t i{0}; i < objects.size(); i++)
+    {
+        objects[i].doStuff();
+    }
 
 
 }
