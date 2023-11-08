@@ -16,6 +16,7 @@ add_executable(Conteiners
   main.cpp
   myvector.h
   mylistforward.h
+  mylist.h
 
   testclass.h
 )

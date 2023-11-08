@@ -5,7 +5,7 @@
 #include "TestClass.h"
 
 template<typename T>
-class MyList
+class MyListForward
 {
 private:
     struct Node
@@ -51,14 +51,14 @@ public:
     };
 
     // CONSTRUCTOR
-    MyList()
+    MyListForward()
         : head(nullptr), tail(nullptr), m_size(0) {}        // Head is nullptr by default
 
-    MyList(const MyList &other)                             // SPEED = O(N)
+    MyListForward(const MyListForward &other)                             // SPEED = O(N)
         : head(nullptr), tail(nullptr), m_size(0)           // Head is null
     { сopy(other); }                                        // call copy method from private section
 
-    MyList (MyList &&other)                                 // SPEED = o(1)
+    MyListForward (MyListForward &&other)                                 // SPEED = o(1)
         : head(other.head),
           tail(other.tail),                                 // Head is now head of Node to move
           m_size(other.m_size)
@@ -69,7 +69,7 @@ public:
         other.m_size = 0;
     }                                                       // ...and head of Node to move is Null
 
-    ~MyList()   {clear_All();}                              // Destructor call clear_All method, wich deletes all element
+    ~MyListForward()   {clear_All();}                              // Destructor call clear_All method, wich deletes all element
 
 
     // INSERT METHODS
@@ -238,7 +238,7 @@ public:
         return m_size;
     }
 
-    MyList &operator=(const MyList &other)      // Overload operator= as Copy
+    MyListForward &operator=(const MyListForward &other)      // Overload operator= as Copy
     {
         if (this != &other)                      // 01 - check, if current obj isn't the same as copy obj
         {
@@ -248,7 +248,7 @@ public:
         return *this;                           // 04 - return current obj
     }
 
-    MyList &operator=(MyList &&other)           // Overload operator= as Move
+    MyListForward &operator=(MyListForward &&other)           // Overload operator= as Move
     {
         if (this != &other)                      // 01 - check if current obj isn't the same to move obj
         {
@@ -325,7 +325,7 @@ public:
     }
 
 private:
-    void сopy(const MyList &other)
+    void сopy(const MyListForward &other)
     {
         if (other.head == nullptr)                                      // 01 - Check, if the list to copy exist
         {
@@ -356,7 +356,7 @@ private:
 void runMyListForward()
 {
     std::cout << "\n=== TEST LIST ===" << std::endl;
-    MyList<int> list01;
+    MyListForward<int> list01;
     list01.print();
 
     std::cout << "\n=== TEST PUSH BACK METHOD ===" << std::endl;
@@ -373,12 +373,12 @@ void runMyListForward()
     std::cout <<list01.size() << std::endl;
 
     std::cout << "\n=== TEST MOVE CONSTUCTOR ===" << std::endl;
-    MyList<int>list02 (std::move(list01));
+    MyListForward<int>list02 (std::move(list01));
     list01.print();
     list02.print();
 
     std::cout << "\n=== TEST COPY CONSTUCTOR ===" << std::endl;
-    MyList<int>list03 (list02);
+    MyListForward<int>list03 (list02);
     list02.print();
     list03.print();
 
@@ -404,8 +404,8 @@ void runMyListForward()
     std::cout <<list03.size() << std::endl;
 
     std::cout << "\n=== TEST OPERATOR= COPY ===" << std::endl;
-    MyList<int>list04;
-    MyList<int>list05;
+    MyListForward<int>list04;
+    MyListForward<int>list05;
     list04.push_back(10);
     list04.push_back(20);
     list05 = list04;
@@ -425,7 +425,7 @@ void runMyListForward()
     TestClass t01("obj01", 1);
     TestClass t02("obj02", 2);
     TestClass t03("obj03", 3);
-    MyList<TestClass> objects;
+    MyListForward<TestClass> objects;
     objects.push_back(t01);
     objects.push_back(t02);
     objects.push_back(t03);
@@ -439,12 +439,12 @@ void runMyListForward()
     std::cout << objects.size() << std::endl;
 
     std::cout << "\n=== TEST ITERATOR ===" << std::endl;
-    MyList<int>list06;
+    MyListForward<int>list06;
     for (int i {0}; i < 10; i++)
     {list06.push_back(i);}
     list06.print();
 
-    for (MyList<int>::Iterator it = list06.begin(); it != list06.end(); ++it)
+    for (MyListForward<int>::Iterator it = list06.begin(); it != list06.end(); ++it)
     {
         *it +=10;
         std::cout << *it<< " ";
