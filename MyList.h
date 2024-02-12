@@ -306,6 +306,146 @@ public:
         }
     }
 
+    Node* remove_N_from_the_End(Node *node, int N)
+    {
+        Node *first = m_head;
+        Node *second = m_head;
+
+        while (N--)
+        {
+            first = first->m_next;
+        }
+
+        if (first == nullptr)
+        {
+            return second->m_next;
+        }
+
+        while (first->m_next != nullptr)
+        {
+            first = first->m_next;
+            second = second->m_next;
+        }
+
+        second->m_next = second->m_next->m_next;
+        return node;
+    }
+
+    Node *merge_Two_Sorted_Lists(Node *one, Node *two)
+    {
+        if (one == nullptr) { return two; }
+        if (two == nullptr) { return one; }
+
+        Node *finalHead = nullptr;
+        if (one->m_data < two->m_data)
+        {
+            finalHead = one;
+            one = one->m_next;
+        }
+        else
+        {
+            finalHead = two;
+            two = two->m_next;
+        }
+
+        Node *p = finalHead;
+        while(one && two)
+        {
+            if (one->m_data < two->m_data)
+            {
+                p->m_next = one;
+                one = one->m_next;
+            }
+            else
+            {
+                p->m_next = two;
+                two = two->m_next;
+            }
+            p = p->m_next;
+        }
+        if (one)
+        {
+            p->m_next = one;
+        }
+        else
+        {
+            p->m_next = two;
+        }
+        return finalHead;
+    }
+
+    Node *merge_Two_Sorted_Lists_Recursive(Node *one, Node *two)
+    {
+        if (one == nullptr) { return two; }
+        if (two == nullptr) { return one; }
+
+        Node *newHead = nullptr;
+
+        if (one->m_data < two->m_data)
+        {
+            newHead = one;
+            newHead->m_next = merge_Two_Sorted_Lists_Recursive(one->m_next, two);
+        }
+        else
+        {
+            newHead = two;
+            newHead->m_next = merge_Two_Sorted_Lists_Recursive(one, two->m_next);
+        }
+        return newHead;
+    }
+
+    int length_recursion (Node *head)                                   // LENTH WITH RECURSION
+    {
+        if (head == nullptr) {return 0;}                                // - basic case
+        int smallAnswwer = length_recursion(head->m_next);
+        return smallAnswwer + 1;
+    }
+
+    bool find (Node *node, T data)
+    {
+        Node *current = m_head;
+        while (current != nullptr)
+        {
+            if (current->m_data == data)
+            {
+                return true;
+            }
+            current = current->m_next;
+        }
+        return false;
+    }
+
+    bool find_recirsion (Node *node, T data)
+    {
+        Node *current = m_head;
+        if (current == nullptr)
+        {
+            return false;
+        }
+        if (current->m_data == data)
+        {
+            return true;
+        }
+        else
+        {
+            find_recirsion(current->m_next, data);
+        }
+    }
+
+    T Mid_Value_BySlowAndFastPointer(Node *node)
+    {
+        Node *slow = node;
+        Node* fast = node->m_next;
+
+        while(fast != nullptr && fast->m_next != nullptr)
+        {
+            slow = slow->m_next;
+            fast = fast->m_next->m_next;
+        }
+
+        return slow->m_data;
+    }
+
     T& begin()
     {
         return m_head->m_data;
@@ -342,6 +482,8 @@ public:
         }
     }
 };
+
+
 
 
 void runMyList()
@@ -414,7 +556,6 @@ void runMyList()
         *i += 10;
     }
     list03.print();
-
 
     std::cout << "\n=== TEST CLEAR ALL ===" << std::endl;
     list01.clear_All();
