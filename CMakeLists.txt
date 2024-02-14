@@ -18,6 +18,7 @@ add_executable(Conteiners
   mylistforward.h
   mylist.h
   mystackarray.h
+  mystacklist.h
 
   testclass.h
 )
