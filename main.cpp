@@ -4,6 +4,7 @@
 #include "MyVector.h"
 #include "MyListForward.h"
 #include "MyList.h"
+#include "MyStackArray.h"
 
 
 int main(int argc, char *argv[])
@@ -12,7 +13,8 @@ int main(int argc, char *argv[])
 
 //    runMyVector();
 //    runMyListForward();
-    runMyList();
+//    runMyList();
+    runMyStackArray();
 
 
 
