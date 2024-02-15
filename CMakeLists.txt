@@ -19,6 +19,7 @@ add_executable(Conteiners
   mylist.h
   mystackarray.h
   mystacklist.h
+  myqueuearray.h
 
   testclass.h
 )

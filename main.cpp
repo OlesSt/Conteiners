@@ -6,6 +6,7 @@
 #include "MyList.h"
 #include "MyStackArray.h"
 #include "MyStackList.h"
+#include "MyQueueArray.h"
 
 
 int main(int argc, char *argv[])
@@ -16,7 +17,8 @@ int main(int argc, char *argv[])
 //    runMyListForward();
 //    runMyList();
 //    runMyStackArray();
-    runMyStackList();
+//    runMyStackList();
+    runMyQueueArray();
 
 
 
