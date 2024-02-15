@@ -20,6 +20,7 @@ add_executable(Conteiners
   mystackarray.h
   mystacklist.h
   myqueuearray.h
+  myqueuelist.h
 
   testclass.h
 )
