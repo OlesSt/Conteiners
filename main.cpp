@@ -8,6 +8,8 @@
 #include "MyStackList.h"
 #include "MyQueueArray.h"
 #include "MyQueueList.h"
+#include "MyGenericTree.h"
+#include "MyBinaryTree.h"
 
 
 int main(int argc, char *argv[])
@@ -20,7 +22,9 @@ int main(int argc, char *argv[])
 //    runMyStackArray();
 //    runMyStackList();
 //    runMyQueueArray();
-    runMyQueueList();
+//    runMyQueueList();
+//    runMyGenericTree();
+    runMyBinaryTree();
 
 
 

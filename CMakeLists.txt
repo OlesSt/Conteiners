@@ -21,6 +21,8 @@ add_executable(Conteiners
   mystacklist.h
   myqueuearray.h
   myqueuelist.h
+  mygenerictree.h
+  mybinarytree.h
 
   testclass.h
 )
