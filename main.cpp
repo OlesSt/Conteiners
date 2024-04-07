@@ -12,18 +12,20 @@
 #include "MyBinaryTree.h"
 
 
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-//    runMyVector();
-//    runMyListForward();
-//    runMyList();
-//    runMyStackArray();
-//    runMyStackList();
-//    runMyQueueArray();
-//    runMyQueueList();
-//    runMyGenericTree();
+
+    runMyVector();
+    runMyListForward();
+    runMyList();
+    runMyStackArray();
+    runMyStackList();
+    runMyQueueArray();
+    runMyQueueList();
+    runMyGenericTree();
     runMyBinaryTree();
 
 

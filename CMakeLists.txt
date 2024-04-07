@@ -23,6 +23,7 @@ add_executable(Conteiners
   myqueuelist.h
   mygenerictree.h
   mybinarytree.h
+  binarysearchtree.h
 
   testclass.h
 )
